@@ -26,7 +26,7 @@
     <div class="container">
         <!-- Setup Screen -->
         <div id="setup-screen" class="screen active">
-            <h1>🎲 Farkle Score Keeper V2.0</h1>
+            <h1>🎲 Farkle Score Keeper</h1>
             <div class="setup-content">
                 <h2>Enter Player Names (2-8 players)</h2>
                 <div id="player-inputs"></div>
@@ -73,11 +73,11 @@
                         </div>
                         <div class="input-group">
                             <input 
-                                type="number" 
+                                type="text" 
                                 id="turn-score-input" 
                                 placeholder="0" 
-                                inputmode="numeric"
-                                min="0"
+                                inputmode="none"
+                                readonly
                                 aria-label="Turn score input">
                             <button id="submit-score-btn" class="btn btn-primary">
                                 <span>Submit</span>

@@ -80,7 +80,11 @@ function init() {
     
     // Modals
     document.getElementById('rematch-btn').onclick = handleRematch;
-    document.getElementById('new-game-btn').onclick = () => location.reload();
+    document.getElementById('new-game-btn').onclick = () => {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.setItem('farkle_fresh_start', 'true');
+        location.reload();
+    };
     document.getElementById('menu-btn').onclick = toggleMenu;
     document.getElementById('close-menu-btn').onclick = toggleMenu;
     document.getElementById('save-game-btn').onclick = saveGameToStorage;
@@ -89,7 +93,6 @@ function init() {
     // Input controls
     document.getElementById('clear-input').onclick = () => {
         turnInput.value = '';
-        turnInput.focus();
         clearValidation();
     };
     
@@ -99,7 +102,6 @@ function init() {
             btn.onclick = () => {
                 const currentVal = parseInt(turnInput.value) || 0;
                 turnInput.value = currentVal + parseInt(btn.dataset.value);
-                turnInput.focus();
                 validateScore();
             };
         }
@@ -352,7 +354,6 @@ function nextTurn() {
     
     updateUI();
     saveGameToStorage();
-    turnInput.focus();
 }
 
 // UI Update Functions
@@ -577,6 +578,13 @@ function saveGameToStorage() {
 
 function loadGameFromStorage() {
     try {
+        // Check if user requested a fresh start
+        if (localStorage.getItem('farkle_fresh_start') === 'true') {
+            localStorage.removeItem('farkle_fresh_start');
+            localStorage.removeItem(STORAGE_KEY);
+            return;
+        }
+        
         const saved = localStorage.getItem(STORAGE_KEY);
         if (!saved) return;
         
@@ -640,7 +648,6 @@ function checkForGameEnd() {
     // Continue playing
     updateUI();
     saveGameToStorage();
-    turnInput.focus();
 }
 
 function endGame() {
@@ -698,7 +705,11 @@ function handleRematch() {
     
     document.getElementById('win-modal').classList.add('hidden');
     updateUI();
+    
+    // Clear and immediately save the fresh state
+    localStorage.removeItem(STORAGE_KEY);
     saveGameToStorage();
+    
     showToast('New game started with same players!', 'success');
 }
 
